@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="UsersLib">
+      <HintPath>..\..\UsersLib\UsersLib\bin\Debug\net8.0\UsersLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

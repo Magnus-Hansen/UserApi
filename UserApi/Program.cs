@@ -1,15 +1,36 @@
-var builder = WebApplication.CreateBuilder(args);
+using UsersLib;
 
-// Add services to the container.
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "AllowAll",
+                                      policy =>
+                                      {
+                                          policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                                      });
+        });
 
-var app = builder.Build();
+        // Add services to the container.
 
-// Configure the HTTP request pipeline.
+        builder.Services.AddControllers();
 
-app.UseAuthorization();
+        builder.Services.AddSingleton(new UserRepo());
 
-app.MapControllers();
+        var app = builder.Build();
 
-app.Run();
+        // Configure the HTTP request pipeline.
+
+        app.UseAuthorization();
+
+        app.UseCors("AllowAll");
+
+        app.MapControllers();
+
+        app.Run();
+    }
+}

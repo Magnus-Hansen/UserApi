@@ -1,12 +1,103 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using UsersLib;
 
 namespace UserApi.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserController : Controller
     {
-        public IActionResult Index()
+        private UserRepo _userRepo;
+        public UserController(UserRepo repository)
         {
-            return View();
+            _userRepo = repository;
+        }
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<User>> Get()
+        {
+            List<User> user = _userRepo.GetAll();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public ActionResult<List<User>> Get(int id)
+        {
+            User user = _userRepo.Get(id);
+
+            if (user == null)
+            {
+                return NoContent();
+            }
+            return Ok(user);
+        }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<User> Post([FromBody] User user)
+        {
+            try
+            {
+                User createdUser = _userRepo.Add(user);
+                return Created("/" + createdUser.Id, createdUser);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<User?> Delete(string? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            if (int.TryParse(id, out int parsedId))
+            {
+                User deletedUser = _userRepo.Delete(parsedId);
+                if (deletedUser == null)
+                {
+                    return NotFound(id);
+                }
+                return Ok(deletedUser);
+            }
+            return BadRequest();
+        }
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public ActionResult<User?> Update(int id, [FromBody] (string? name, string? password) parameters)
+        public ActionResult<User?> Update(int id, [FromBody] User user)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+            //User updatedUser = _userRepo.Update(id, parameters.name, parameters.password);
+            User updatedUser = _userRepo.Update(id, user.Name, user.Password);
+            if (updatedUser == null)
+            {
+                return NotFound(id);
+            }
+            return Ok(updatedUser);
         }
     }
 }
