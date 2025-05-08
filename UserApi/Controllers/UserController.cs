@@ -80,7 +80,7 @@ namespace UserApi.Controllers
             }
             return BadRequest();
         }
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,6 +98,6 @@ namespace UserApi.Controllers
                 return NotFound(id);
             }
             return Ok(updatedUser);
-        }
+        }*/
     }
 }
