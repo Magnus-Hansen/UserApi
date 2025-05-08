@@ -29,14 +29,14 @@ namespace UserApi.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<List<User>> Get(int id)
         {
             User user = _userRepo.Get(id);
 
             if (user == null)
             {
-                return NoContent();
+                return NotFound();
             }
             return Ok(user);
         }
