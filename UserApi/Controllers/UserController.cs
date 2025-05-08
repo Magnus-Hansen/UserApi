@@ -32,7 +32,7 @@ namespace UserApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<List<User>> Get(int id)
         {
-            User user = _userRepo.Get(id);
+            User user = _userRepo.Get(id - 1);
 
             if (user == null)
             {
@@ -48,7 +48,8 @@ namespace UserApi.Controllers
             try
             {
                 User createdUser = _userRepo.Add(user);
-                return Created("/" + createdUser.Id, createdUser);
+                //return Created("/" + createdUser.Id, createdUser);
+                return Created("/", createdUser);
             }
             catch (ArgumentNullException ex)
             {
@@ -71,7 +72,7 @@ namespace UserApi.Controllers
             }
             if (int.TryParse(id, out int parsedId))
             {
-                User deletedUser = _userRepo.Delete(parsedId);
+                User deletedUser = _userRepo.Delete(parsedId - 1);
                 if (deletedUser == null)
                 {
                     return NotFound(id);
