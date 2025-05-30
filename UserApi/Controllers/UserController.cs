@@ -27,7 +27,7 @@ namespace UserApi.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<List<User>> Get(int id)
@@ -39,7 +39,7 @@ namespace UserApi.Controllers
                 return NotFound();
             }
             return Ok(user);
-        }
+        }*/
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -100,5 +100,16 @@ namespace UserApi.Controllers
             }
             return Ok(updatedUser);
         }*/
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<int> Fibonacci(int id)
+        {
+            return Ok(CalcFib(id));
+        }
+        private static int CalcFib(int n)
+        {
+            return n <= 1 ? n : CalcFib(n - 1) + CalcFib(n - 2);
+        }
     }
 }
